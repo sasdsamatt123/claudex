@@ -1,0 +1,41 @@
+name: Bug report
+description: Something is broken
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: claudex version
+      description: Output of `claudex --version`
+    validations:
+      required: true
+  - type: input
+    id: shell
+    attributes:
+      label: Shell + OS
+      description: Output of `echo $SHELL && uname -a`
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: claudex doctor output
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      placeholder: |
+        1. claudex add ...
+        2. ...
+        3. observe X
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: false

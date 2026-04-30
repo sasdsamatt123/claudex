@@ -1,0 +1,48 @@
+name: New provider request
+description: Suggest adding a model provider to the bundled registry
+labels: [provider]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Provider name
+    validations:
+      required: true
+  - type: input
+    id: keyUrl
+    attributes:
+      label: Key URL
+      description: Where users register and create an API key
+    validations:
+      required: true
+  - type: input
+    id: baseUrl
+    attributes:
+      label: Anthropic-compatible base URL
+      description: Must end in something like /anthropic. If the provider only exposes OpenAI format, claudex v0.1 cannot support it.
+    validations:
+      required: true
+  - type: textarea
+    id: models
+    attributes:
+      label: Recommended models
+      placeholder: |
+        main: <model-id>
+        small/background: <model-id>
+        free tier: yes/no
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Pricing / tier / quirks
+      description: Free? Trial? Paid? Any rate limits?
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have personally registered, gotten a key, and verified Claude Code works against this endpoint
+          required: true

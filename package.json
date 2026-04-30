@@ -1,0 +1,64 @@
+{
+  "name": "claudex",
+  "version": "0.1.0",
+  "description": "Multi-account, multi-provider Claude Code CLI — bring your own keys, ship in seconds",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "anthropic",
+    "deepseek",
+    "minimax",
+    "glm",
+    "z.ai",
+    "moonshot",
+    "openrouter",
+    "multi-account",
+    "cli"
+  ],
+  "author": "claudex contributors",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "claudex": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "src/templates",
+    "scripts/install.sh",
+    "docs",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run lint && npm run test && npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "picocolors": "^1.1.0",
+    "prompts": "^2.4.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourname/claudex.git"
+  },
+  "homepage": "https://github.com/yourname/claudex#readme",
+  "bugs": {
+    "url": "https://github.com/yourname/claudex/issues"
+  }
+}

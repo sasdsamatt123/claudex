@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "lastUpdated": "2026-05-01",
+  "providers": [
+    {
+      "id": "anthropic",
+      "displayName": "Anthropic (Resmi / Official)",
+      "tier": "paid",
+      "baseUrl": null,
+      "envStyle": "anthropic",
+      "auth": {
+        "envVar": "ANTHROPIC_AUTH_TOKEN",
+        "keyUrl": "https://console.anthropic.com/settings/keys",
+        "needsKey": false,
+        "instructions": {
+          "tr": "Resmi Claude Code için Anthropic abonliği yeterli. Multi-account istiyorsan ikinci hesap aç, claudex CONFIG_DIR'ı izole edecek.",
+          "en": "For official Claude Code, an Anthropic subscription is enough. For multi-account, register a second account; claudex isolates CONFIG_DIR."
+        }
+      },
+      "models": [],
+      "defaults": { "main": null, "small": null },
+      "notes": {
+        "tr": "Default sağlayıcı. claudex sadece CLAUDE_CONFIG_DIR'ı izole eder, key yönetimi yapmaz.",
+        "en": "Default provider. claudex only isolates CLAUDE_CONFIG_DIR; no key management needed."
+      },
+      "lastVerified": "2026-05-01"
+    },
+    {
+      "id": "zai",
+      "displayName": "Z.ai (Zhipu) — FREE FOREVER",
+      "tier": "free",
+      "baseUrl": "https://api.z.ai/api/anthropic",
+      "envStyle": "anthropic",
+      "auth": {
+        "envVar": "ANTHROPIC_AUTH_TOKEN",
+        "keyUrl": "https://z.ai/manage-apikey/apikey-list",
+        "needsKey": true,
+        "instructions": {
+          "tr": "1) https://z.ai → kayıt ol  2) Sol menü 'API Keys'  3) 'Create' → key kopyala  4) Buraya yapıştır. GLM-4.7-Flash ve GLM-4.5-Flash süresiz ücretsiz, kart istemez.",
+          "en": "1) https://z.ai → register  2) Left menu 'API Keys'  3) 'Create' → copy key  4) Paste here. GLM-4.7-Flash and GLM-4.5-Flash are free forever, no card."
+        }
+      },
+      "models": [
+        { "id": "glm-4.7-flash", "role": "main", "free": true, "context": 203000, "note": "MoE 30B aktif 3B, coding güçlü" },
+        { "id": "glm-4.5-flash", "role": "small", "free": true, "context": 131000, "note": "Hafif/hızlı kuzeni" },
+        { "id": "glm-4.7", "role": "main", "free": false, "note": "Coding plan ($18/mo)" },
+        { "id": "glm-5.1", "role": "main", "free": false, "note": "744B MoE — 8+ saat otonom task" }
+      ],
+      "defaults": { "main": "glm-4.7-flash", "small": "glm-4.5-flash" },
+      "notes": {
+        "tr": "v0.1'in en güçlü ücretsiz seçeneği. 6 ay sonrası için politika değişebilir, doctor uyarır.",
+        "en": "Strongest free option in v0.1. Policy may change long-term; doctor will warn."
+      },
+      "lastVerified": "2026-05-01"
+    },
+    {
+      "id": "minimax",
+      "displayName": "MiniMax — FREE TRIAL (Kasım 7 2026'a kadar)",
+      "tier": "trial",
+      "trialEndsAt": "2026-11-07",
+      "baseUrl": "https://api.minimax.io/anthropic",
+      "envStyle": "anthropic",
+      "auth": {
+        "envVar": "ANTHROPIC_AUTH_TOKEN",
+        "keyUrl": "https://platform.minimax.io/user-center/basic-information/interface-key",
+        "needsKey": true,
+        "instructions": {
+          "tr": "1) https://platform.minimax.io → kayıt ol  2) User Center → API Keys → Create  3) Key kopyala. MiniMax-M2.7 Claude Opus 4.6 seviyesinde (SWE-Pro %56). Trial credits 30 gün geçerli, trial dönemi 7 Kasım 2026'a kadar uzatılmış.",
+          "en": "1) https://platform.minimax.io → register  2) User Center → API Keys → Create  3) Copy key. MiniMax-M2.7 matches Claude Opus 4.6 (56% SWE-Pro). Trial credits valid 30 days; trial period extended through Nov 7 2026."
+        }
+      },
+      "models": [
+        { "id": "MiniMax-M2.7", "role": "main", "free": true, "context": 204800, "note": "60 tps, Opus 4.6 seviyesi" },
+        { "id": "MiniMax-M2.7-highspeed", "role": "small", "free": true, "context": 204800, "note": "100 tps highspeed" },
+        { "id": "MiniMax-M2.5", "role": "main", "free": true, "context": 204800 },
+        { "id": "MiniMax-M2.5-highspeed", "role": "small", "free": true, "context": 204800 }
+      ],
+      "defaults": { "main": "MiniMax-M2.7", "small": "MiniMax-M2.7-highspeed" },
+      "notes": {
+        "tr": "v0.1'in en güçlü trial-free modeli. Trial bitince paid plana geçer ($10/ay token plan).",
+        "en": "Strongest trial-free model in v0.1. Switches to paid plan after trial ($10/mo token plan)."
+      },
+      "lastVerified": "2026-05-01"
+    },
+    {
+      "id": "deepseek",
+      "displayName": "DeepSeek — Ucuz / Cheap",
+      "tier": "paid",
+      "baseUrl": "https://api.deepseek.com/anthropic",
+      "envStyle": "anthropic",
+      "auth": {
+        "envVar": "ANTHROPIC_AUTH_TOKEN",
+        "keyUrl": "https://platform.deepseek.com/api_keys",
+        "needsKey": true,
+        "instructions": {
+          "tr": "1) https://platform.deepseek.com → kayıt ol  2) API Keys → Create new API key  3) Top up balance (min $2, kart/Alipay)  4) Key buraya. Pro: $0.27/M input, $1.10/M output — Sonnet'ten 10x ucuz.",
+          "en": "1) https://platform.deepseek.com → register  2) API Keys → Create new API key  3) Top up balance (min $2, card/Alipay)  4) Paste key. Pro: $0.27/M input, $1.10/M output — 10x cheaper than Sonnet."
+        }
+      },
+      "models": [
+        { "id": "deepseek-v4-pro", "role": "main", "free": false, "context": 128000, "note": "Ana model — ağır kod" },
+        { "id": "deepseek-v4-flash", "role": "small", "free": false, "context": 128000, "note": "Arka plan / ucuz task" }
+      ],
+      "defaults": { "main": "deepseek-v4-pro", "small": "deepseek-v4-flash" },
+      "notes": {
+        "tr": "Ödemeli ama ucuz. Cache hit'te 10x daha ucuz. Ciddi kod için en cost-effective.",
+        "en": "Paid but cheap. 10x cheaper on cache hits. Most cost-effective for serious code."
+      },
+      "lastVerified": "2026-05-01"
+    },
+    {
+      "id": "moonshot",
+      "displayName": "Moonshot Kimi",
+      "tier": "paid",
+      "baseUrl": "https://api.moonshot.ai/anthropic",
+      "envStyle": "anthropic",
+      "auth": {
+        "envVar": "ANTHROPIC_AUTH_TOKEN",
+        "keyUrl": "https://platform.moonshot.ai/console/api-keys",
+        "needsKey": true,
+        "instructions": {
+          "tr": "1) https://platform.moonshot.ai → kayıt ol  2) Console → API Keys → Create  3) Bakiye yükle. Kimi K2.5: 1T param MoE, uzun context için optimize.",
+          "en": "1) https://platform.moonshot.ai → register  2) Console → API Keys → Create  3) Top up. Kimi K2.5: 1T param MoE, optimized for long context."
+        }
+      },
+      "models": [
+        { "id": "kimi-k2.5", "role": "main", "free": false, "note": "1T param MoE, uzun context" },
+        { "id": "kimi-k2.6", "role": "main", "free": false, "note": "Beta (April 2026)" }
+      ],
+      "defaults": { "main": "kimi-k2.5", "small": "kimi-k2.5" },
+      "notes": {
+        "tr": "Uzun context (>200K) işlerinde güçlü. Kimi Code planı ~$19/ay.",
+        "en": "Strong on long-context (>200K) work. Kimi Code plan ~$19/mo."
+      },
+      "lastVerified": "2026-05-01"
+    },
+    {
+      "id": "openrouter",
+      "displayName": "OpenRouter — 32 ücretsiz model / 32 free models",
+      "tier": "free",
+      "baseUrl": "https://openrouter.ai/api",
+      "envStyle": "anthropic",
+      "auth": {
+        "envVar": "ANTHROPIC_AUTH_TOKEN",
+        "keyUrl": "https://openrouter.ai/settings/keys",
+        "needsKey": true,
+        "instructions": {
+          "tr": "1) https://openrouter.ai → kayıt ol (kart yok)  2) Settings → Keys → Create  3) Key buraya. Tek key ile 32 ücretsiz modele erişim. Limit: 20 RPM / 200 request günlük (model başı). Ana ANTHROPIC_API_KEY env'ini boş bırakacak.",
+          "en": "1) https://openrouter.ai → register (no card)  2) Settings → Keys → Create  3) Paste key. One key, access to 32 free models. Limit: 20 RPM / 200 req per day (per model). Main ANTHROPIC_API_KEY will be left empty."
+        }
+      },
+      "models": [
+        { "id": "qwen/qwen3-coder:free", "role": "main", "free": true, "context": 262000, "note": "EN GÜÇLÜ ücretsiz coder — Qwen3-Coder 480B" },
+        { "id": "z-ai/glm-4.5-air:free", "role": "small", "free": true, "context": 131000, "note": "Hafif GLM, hızlı" },
+        { "id": "minimax/minimax-m2.5:free", "role": "main", "free": true, "context": 197000 },
+        { "id": "openai/gpt-oss-120b:free", "role": "main", "free": true, "context": 131000, "note": "OpenAI open-source — reasoning" },
+        { "id": "openai/gpt-oss-20b:free", "role": "small", "free": true, "context": 131000 },
+        { "id": "inclusionai/ling-2.6-1t:free", "role": "main", "free": true, "context": 262000, "note": "1T param, agentic" },
+        { "id": "tencent/hy3-preview:free", "role": "main", "free": true, "context": 262000, "note": "#2 coding" },
+        { "id": "google/gemma-4-31b-it:free", "role": "main", "free": true, "context": 262000, "note": "Vision + tools" },
+        { "id": "nvidia/nemotron-3-super-120b-a12b:free", "role": "main", "free": true, "context": 262000, "note": "Multi-agent reasoning" },
+        { "id": "poolside/laguna-m.1:free", "role": "main", "free": true, "context": 131000, "note": "Coding agents" },
+        { "id": "anthropic/claude-sonnet-4.5", "role": "main", "free": false, "note": "Resmi Sonnet 4.5 — paid" },
+        { "id": "anthropic/claude-opus-4.7", "role": "main", "free": false, "note": "Resmi Opus 4.7 — paid" }
+      ],
+      "defaults": { "main": "qwen/qwen3-coder:free", "small": "z-ai/glm-4.5-air:free" },
+      "notes": {
+        "tr": "Tek key ile çoğul provider. Limit dolarsa /model komutuyla diğer free modele geç.",
+        "en": "One key, many providers. Switch to other free models with /model when rate-limited."
+      },
+      "lastVerified": "2026-05-01"
+    }
+  ]
+}

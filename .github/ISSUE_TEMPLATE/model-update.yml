@@ -1,0 +1,28 @@
+name: Model / pricing update
+description: An existing provider's models or pricing changed
+labels: [provider, update]
+body:
+  - type: input
+    id: provider
+    attributes:
+      label: Provider id
+      placeholder: zai / minimax / deepseek / moonshot / openrouter / anthropic
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: What changed
+      placeholder: |
+        - new model X added
+        - default fast model deprecated
+        - free tier ended on YYYY-MM-DD
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source URL
+      description: Provider docs / changelog confirming the change
+    validations:
+      required: true
