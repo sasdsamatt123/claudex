@@ -28,7 +28,7 @@ claudex init
 
 Veya GitHub'dan klonla:
 ```bash
-git clone https://github.com/mertapp1122/claudex.git
+git clone https://github.com/Mattai1/claudex.git
 cd claudex
 npm install && npm run build && npm link
 claudex init

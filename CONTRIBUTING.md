@@ -67,7 +67,7 @@ Use the [bug issue template](.github/ISSUE_TEMPLATE/bug.yml). Include:
 ## Code contributions
 
 ```bash
-git clone https://github.com/mertapp1122/claudex.git
+git clone https://github.com/Mattai1/claudex.git
 cd claudex
 npm install
 npm test       # all tests should pass
