@@ -31,7 +31,7 @@
 ### Kurulum (30 saniye)
 
 ```bash
-git clone https://github.com/Mattai1/claudex.git
+git clone https://github.com/mertapp1122/claudex.git
 cd claudex
 npm install && npm run build && npm link
 claudex init
@@ -173,7 +173,7 @@ Mevcut `~/.claude/` ile paylaşım: default olarak agents/commands/skills/plugin
 ### Install (30 seconds)
 
 ```bash
-git clone https://github.com/Mattai1/claudex.git
+git clone https://github.com/mertapp1122/claudex.git
 cd claudex
 npm install && npm run build && npm link
 claudex init
