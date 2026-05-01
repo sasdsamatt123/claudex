@@ -6,8 +6,13 @@ import { runList } from "./commands/list.js";
 import { runRemove } from "./commands/remove.js";
 import { runProvidersList, runProvidersInfo } from "./commands/providers.js";
 import { runDoctor } from "./commands/doctor.js";
+import { runRecommend } from "./commands/recommend.js";
+import { runValidate } from "./commands/validate.js";
+import { runQuickstart } from "./commands/quickstart.js";
+import { runExport } from "./commands/export.js";
+import { runImport } from "./commands/import.js";
 
-const VERSION = "0.1.0";
+const VERSION = "0.2.0";
 
 setLang(detectLang());
 
@@ -80,6 +85,36 @@ program
   .command("doctor")
   .description("Diagnose the claudex setup and per-profile health")
   .action(runDoctor);
+
+program
+  .command("recommend [intent]")
+  .description("Recommend top-3 (provider, model) pairs for an intent (interactive if omitted)")
+  .option("--json", "Output JSON")
+  .action((intent, opts) => runRecommend(intent, opts));
+
+program
+  .command("validate <name>")
+  .description("Send a 1-token test request to verify the profile's key + model")
+  .action(runValidate);
+
+program
+  .command("quickstart")
+  .description("Guided setup of all bundled free providers (Z.ai, MiniMax, OpenRouter)")
+  .action(runQuickstart);
+
+program
+  .command("export <name>")
+  .description("Export a profile as a redacted (no-key) template")
+  .option("-o, --output <file>", "Write to file instead of stdout")
+  .action(runExport);
+
+program
+  .command("import <file>")
+  .description("Load a profile template and create the profile (prompts for key)")
+  .option("--rename <newName>", "Use a different profile name on import")
+  .option("--key <key>", "API key (skip interactive prompt)")
+  .option("-y, --yes", "Overwrite existing profile without confirmation")
+  .action(runImport);
 
 program.parseAsync(process.argv).catch((err) => {
   console.error(err?.stack ?? err);

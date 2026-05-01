@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import path from "node:path";
 import prompts from "prompts";
 import pc from "picocolors";
 import { getPaths, profileDir } from "../core/paths.js";
@@ -24,6 +23,7 @@ import {
   nowIso,
 } from "../core/profiles.js";
 import { t, getLang } from "../core/i18n.js";
+import { pingProvider } from "../core/validate.js";
 
 export interface AddOptions {
   provider?: string;
@@ -162,37 +162,44 @@ export async function runAdd(name: string, opts: AddOptions = {}): Promise<void>
     share = !!r.share;
   }
 
-  // Persist
-  const dir = profileDir(name);
-  fs.mkdirSync(dir, { recursive: true });
-  if (provider.auth.needsKey) {
-    writeSecret(dir, key);
-  }
-  if (share) {
-    const r = shareFromMainClaude(dir);
-    for (const err of r.errors) {
-      console.warn(pc.yellow(`⚠ symlink ${err.name}: ${err.reason}`));
+  // Cost preview (after model pick)
+  if (mainModel) {
+    const m = provider.models.find((x) => x.id === mainModel);
+    if (m) {
+      const label = costLabel(m);
+      if (label) {
+        console.log("");
+        console.log(pc.dim(`${t("cost.preview")} ${label}`));
+      }
     }
   }
-  upsertProfile({
+
+  // Persist
+  const dir = createProfile({
     name,
-    providerId: provider.id,
-    baseUrl: provider.baseUrl,
+    provider,
+    key: provider.auth.needsKey ? key : null,
     mainModel: mainModel ?? null,
     smallModel: smallModel ?? null,
     share,
-    createdAt: existing?.createdAt ?? nowIso(),
-    updatedAt: nowIso(),
+    existingCreatedAt: existing?.createdAt ?? null,
   });
-  regenerateAliases();
 
-  // ensure rc block
-  const shell = detectShell();
-  if (shell.rcPath) {
-    ensureBlock(shell.rcPath, shell.kind === "fish");
+  // Optionally test the key
+  if (provider.auth.needsKey && key && !opts.yes) {
+    const { testIt } = await prompts({
+      type: "confirm",
+      name: "testIt",
+      message: t("cost.testKeyNow"),
+      initial: true,
+    });
+    if (testIt) {
+      await testProfileKey(provider, mainModel ?? defaultMain(provider), key);
+    }
   }
 
   // Output
+  const shell = detectShell();
   console.log("");
   console.log(pc.green(t("add.success")), pc.dim(dir));
   console.log(pc.green(t("add.aliasGen")), pc.bold(name));
@@ -207,6 +214,76 @@ export async function runAdd(name: string, opts: AddOptions = {}): Promise<void>
   console.log(t("add.runIt"));
   console.log("  " + pc.cyan(sourceCmd));
   console.log("  " + pc.bold(name));
+}
+
+export interface CreateProfileInput {
+  name: string;
+  provider: Provider;
+  key: string | null;
+  mainModel: string | null;
+  smallModel: string | null;
+  share: boolean;
+  existingCreatedAt: string | null;
+}
+
+/**
+ * The non-interactive "do the work" function. Used by `add` after prompts
+ * resolve, by `quickstart` when looping, and by `import` when loading a
+ * template. Writes the profile dir, .env, symlinks, profile entry, regenerates
+ * aliases, and ensures the rc block.
+ */
+export function createProfile(input: CreateProfileInput): string {
+  const dir = profileDir(input.name);
+  fs.mkdirSync(dir, { recursive: true });
+  if (input.key) {
+    writeSecret(dir, input.key);
+  }
+  if (input.share) {
+    const r = shareFromMainClaude(dir);
+    for (const err of r.errors) {
+      console.warn(pc.yellow(`⚠ symlink ${err.name}: ${err.reason}`));
+    }
+  }
+  upsertProfile({
+    name: input.name,
+    providerId: input.provider.id,
+    baseUrl: input.provider.baseUrl,
+    mainModel: input.mainModel,
+    smallModel: input.smallModel,
+    share: input.share,
+    createdAt: input.existingCreatedAt ?? nowIso(),
+    updatedAt: nowIso(),
+  });
+  regenerateAliases();
+  const shell = detectShell();
+  if (shell.rcPath) {
+    ensureBlock(shell.rcPath, shell.kind === "fish");
+  }
+  return dir;
+}
+
+function costLabel(m: Model): string | null {
+  if (m.free && m.pricing && m.pricing.trial) return t("cost.trial");
+  if (m.free) return t("cost.free");
+  if (!m.pricing) return null;
+  const inp = m.pricing.inputPer1M.toString();
+  const out = m.pricing.outputPer1M.toString();
+  return `$${inp}/M input · $${out}/M output`;
+}
+
+async function testProfileKey(
+  provider: Provider,
+  model: string | null,
+  key: string
+): Promise<void> {
+  if (!provider.baseUrl || !model) return;
+  console.log(pc.dim(t("validate.pinging")));
+  const res = await pingProvider({ baseUrl: provider.baseUrl, model, apiKey: key });
+  if (res.ok) {
+    console.log(pc.green(t("validate.ok")), pc.dim(`(${res.latencyMs}ms)`));
+  } else {
+    console.log(pc.yellow(`${t("validate.fail")} ${res.reason}`));
+  }
 }
 
 function modelLabel(m: Model): string {

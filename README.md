@@ -1,8 +1,8 @@
 # claudex
 
-> Multi-account, multi-provider Claude Code CLI. **Bring your own keys.**
+> **Claude Code'u tek terminalden çoklu hesap + çoklu sağlayıcı (Anthropic, Z.ai, MiniMax, DeepSeek, Moonshot, OpenRouter…) ile kullan. Kendi key'lerini getir.**
 
-`claudex`, [Claude Code](https://www.anthropic.com/claude-code)'u tek terminalden birden fazla hesap ve birden fazla model sağlayıcısı (Anthropic, Z.ai, MiniMax, DeepSeek, Moonshot, OpenRouter…) ile kullanmanı sağlar. Tek komutla yeni bir `claudeX` alias'ı eklersin, kendi API key'ini girersin, alias hazır olur.
+`claudex`, [Claude Code](https://www.anthropic.com/claude-code)'un kendi `ANTHROPIC_BASE_URL` / `CLAUDE_CONFIG_DIR` env override mekanikleri üzerine kurulu — **proxy yok, router yok**. Tek komutla yeni bir `claudeX` alias'ı eklersin: kendi API key'ini girersin, sağlayıcıyı + modeli seçersin, hazır.
 
 [English version below ↓](#english)
 
@@ -12,21 +12,20 @@
 
 ### Neden?
 
-Şu an Claude Code:
-- Anthropic abonliğinin rate-limit'ine takılıyor
-- DeepSeek / Z.ai / MiniMax gibi **çok daha ucuz veya ücretsiz** modelleri kullanmana izin veriyor (ANTHROPIC_BASE_URL override ile) ama her sağlayıcı için manuel alias yazman gerek
-- Multi-account için her terminalde farklı `CLAUDE_CONFIG_DIR` set etmen gerek
+- Anthropic abonelik rate-limit'ini iki katına çıkarmak (multi-account)
+- DeepSeek / Z.ai / MiniMax gibi **çok daha ucuz veya ücretsiz** modelleri Claude Code üzerinden kullanmak
+- Her şey Claude Code'un kendi UI/skill/MCP/agent dünyasında, sadece arkadaki model değişiyor
 
-`claudex` bu üç problemi tek araçta çözüyor.
+### Önkoşullar
 
-### Hızlı kurulum
+| Gereken | Nasıl yüklerim |
+|---|---|
+| Node.js 20+ | https://nodejs.org/ |
+| Claude Code | `npm install -g @anthropic-ai/claude-code` |
+| zsh veya bash | macOS / Linux'ta default |
 
-```bash
-npm install -g claudex
-claudex init
-```
+### Kurulum (30 saniye)
 
-Veya GitHub'dan klonla:
 ```bash
 git clone https://github.com/Mattai1/claudex.git
 cd claudex
@@ -34,95 +33,122 @@ npm install && npm run build && npm link
 claudex init
 ```
 
-### Yeni alias ekle (interactive)
+> ℹ️ `npm install -g claudex` yayını yakında. Şimdilik `git clone`.
+
+### İlk profil (kılavuzlu)
 
 ```bash
-claudex add claude5
+claudex quickstart
 ```
 
-Sana şunları sorar:
-1. **Sağlayıcı seç** (Z.ai, MiniMax, OpenRouter, DeepSeek, Moonshot, Anthropic)
-2. **API key** — sağlayıcının site URL'i gösterilir, key'i alıp yapıştırırsın
-3. **Ana model** ve **arka plan modeli**
-4. **`~/.claude/` ile dosya paylaşımı** (agents, commands, skills, plugins paylaşılır)
+Z.ai → MiniMax → OpenRouter sırasıyla ilerler. Her birinde:
+- Key URL'sini gösterir (kayıt → API key oluştur)
+- Key'i yapıştırırsın (gizli)
+- "Atlamak istiyorum" → enter → atlanır
+Bittiğinde `source ~/.zshrc` → `claude-zai` (veya `claude-minimax`, `claude-or`) yazınca Claude Code başlar.
 
-Bittiğinde:
+### Hangi modeli seçeyim?
+
 ```bash
-source ~/.zshrc
-claude5
+claudex recommend
 ```
 
-### Bundled sağlayıcılar (v0.1)
+İnteraktif: "Ne yapmak istiyorsun?" → 8 use-case (hızlı kod / refactor / uzun context / vision / …). Top-3 öneriyi rationale'la birlikte gösterir, kuracağın komutu yazdırır.
 
-| ID | Tier | Neresi? | Default modeller |
-|----|------|---------|------------------|
-| `anthropic` | Resmi | Abonlik | (default) |
-| `zai` | **ÜCRETSİZ (süresiz)** | [z.ai](https://z.ai) | GLM-4.7-Flash / GLM-4.5-Flash |
-| `minimax` | **ÜCRETSİZ deneme** (Kasım 7 2026'a kadar) | [platform.minimax.io](https://platform.minimax.io) | MiniMax-M2.7 |
-| `deepseek` | Ucuz ödemeli | [platform.deepseek.com](https://platform.deepseek.com) | deepseek-v4-pro / flash |
-| `moonshot` | Ödemeli | [platform.moonshot.ai](https://platform.moonshot.ai) | Kimi K2.5 / K2.6 |
-| `openrouter` | 32 ücretsiz model | [openrouter.ai](https://openrouter.ai) | qwen3-coder:free |
+Veya non-interactive:
+```bash
+claudex recommend coding-fast --json
+```
 
-Hepsi **Anthropic-uyumlu** endpoint'lere sahip — proxy/router yok, doğrudan Claude Code env var'larıyla çalışır.
+### Karar ağacı
 
-### Komutlar
+```
+Ücretsiz?
+├── Süresiz ücretsiz model → claudex add <name> --provider zai
+├── 32 ücretsiz modelin biri → claudex add <name> --provider openrouter
+└── Trial (Kasım 7 2026'a kadar) → claudex add <name> --provider minimax
+
+Ucuz ödemeli?
+└── DeepSeek (~10x Sonnet'ten ucuz) → claudex add <name> --provider deepseek
+
+Resmi Anthropic (multi-account izolasyon)?
+└── claudex add <name> --provider anthropic --no-share
+```
+
+### Tüm komutlar
 
 ```bash
 claudex init                       # ilk kurulum (~/.claudex + shell rc block)
-claudex add <isim> [-p <provider>] # yeni alias ekle (interactive)
+claudex quickstart                 # 3 ücretsiz sağlayıcı için kılavuzlu setup
+claudex recommend [<intent>]       # ne yapmak istediğine göre top-3 model önerisi
+claudex add <isim> [-p <provider>] # yeni alias (interactive)
+claudex validate <isim>            # 1-token ping ile key + model doğrula
 claudex list                       # tüm profilleri listele
-claudex remove <isim>              # alias'ı kaldır
-claudex providers                  # mevcut sağlayıcıları gör
-claudex providers info <id>        # bir sağlayıcı detayı (key URL + modeller)
-claudex doctor                     # kurulumu kontrol et
+claudex remove <isim>              # alias kaldır
+claudex providers [info <id>]      # sağlayıcı kataloğu
+claudex export <isim> [-o file]    # redacted JSON template (key olmadan)
+claudex import <file>              # template'i yükle, key sor, profil oluştur
+claudex doctor                     # kurulum sağlığı
 claudex --lang en                  # İngilizce output
 ```
+
+### Bundled sağlayıcılar
+
+| ID | Tier | Site | Default |
+|----|------|------|---------|
+| `anthropic` | Resmi | https://console.anthropic.com | (default) |
+| `zai` | **ÜCRETSİZ FOREVER** | https://z.ai | GLM-4.7-Flash |
+| `minimax` | **ÜCRETSİZ TRIAL** (Kasım 7 2026) | https://platform.minimax.io | M2.7 |
+| `deepseek` | Ucuz ödemeli | https://platform.deepseek.com | deepseek-v4-pro |
+| `moonshot` | Ödemeli (long-context uzmanı) | https://platform.moonshot.ai | Kimi K2.5 |
+| `openrouter` | 32 ücretsiz model | https://openrouter.ai | qwen3-coder:free |
+
+Hepsi **Anthropic-uyumlu** endpoint'lere sahip — proxy gerek yok. Detay → [docs/PROVIDERS.md](docs/PROVIDERS.md).
 
 ### Nasıl çalışıyor?
 
 Claude Code 5 env değişkenine bakar:
 - `CLAUDE_CONFIG_DIR` — sessions, history, kullanıcı state'i nereye yazılsın
-- `ANTHROPIC_BASE_URL` — API endpoint
+- `ANTHROPIC_BASE_URL` — API endpoint (default: api.anthropic.com)
 - `ANTHROPIC_AUTH_TOKEN` — endpoint'in key'i
-- `ANTHROPIC_MODEL` — ana model
-- `ANTHROPIC_SMALL_FAST_MODEL` — arka plan görevleri için
+- `ANTHROPIC_MODEL`, `ANTHROPIC_SMALL_FAST_MODEL` — main + small modeller
 
-`claudex add` her profil için bir shell function üretir. Bu function `.env`'den key'i okur, env'leri set eder, `claude` binary'sini çağırır. Key argv'de görünmez, history'e düşmez.
+`claudex add` her profil için bir shell function üretir. Function `.env`'den key'i okur, env'leri set eder, `claude` binary'sini çağırır. Key argv'de görünmez, history'e düşmez.
 
 ### Dosya yapısı
 
 ```
 ~/.claudex/
-├── config.json                 # tool config
-├── profiles.json               # profil listesi
-├── profiles/
-│   └── <isim>/
-│       ├── .env                # API key (mode 0600, kullanıcının kendi key'i)
-│       └── (CLAUDE_CONFIG_DIR — symlink veya isolated)
-├── generated/aliases.sh        # ~/.zshrc tarafından source edilir
-└── backups/                    # her rc edit'inde otomatik backup
+├── profiles/<isim>/
+│   ├── .env                # API key (mode 0600)
+│   └── (CLAUDE_CONFIG_DIR — symlink veya isolated)
+├── generated/aliases.sh    # ~/.zshrc tarafından source edilir
+└── backups/                # her rc edit'inde otomatik backup
 ```
 
-### Mevcut `~/.claude/` ile paylaşım
-
-`--share` (default) ile yeni profil aşağıdaki dosyaları sembolik link ile ana `~/.claude/`'den alır — yani agents, commands, skills, plugins, projects, CLAUDE.md, settings.json, mcp.json hepsi senkron kalır. Sadece `.claude.json`, `history.jsonl`, sessions per-profile.
-
-`--no-share` ile tamamen izole bir profil yaratırsın (sıfırdan başlangıç).
+Mevcut `~/.claude/` ile paylaşım: default olarak agents/commands/skills/plugins/CLAUDE.md/settings.json/mcp.json **symlink** edilir → her profilde aynı tooling. `--no-share` ile tamamen izole profile.
 
 ### Güvenlik
 
-- Key'ler `~/.claudex/profiles/<isim>/.env` içinde **düz metin**, mode 0600
+- Key'ler `~/.claudex/profiles/<isim>/.env`, mode 0600
 - `claudex` repo'ya hiçbir key commit edilmez (otomatik `.gitignore`)
-- v0.2'de macOS Keychain entegrasyonu opt-in olarak gelecek
-- Daha fazla detay → [docs/SECURITY.md](docs/SECURITY.md)
+- Detay → [docs/SECURITY.md](docs/SECURITY.md)
 
-### Yeni sağlayıcı eklemek istersen
+### Yeni sağlayıcı eklemek
 
-`src/templates/providers.json`'a JSON entry ekle, PR aç. Kod değiştirmen gerekmez. Detay → [CONTRIBUTING.md](CONTRIBUTING.md).
+[`src/templates/providers.json`](src/templates/providers.json)'a JSON entry ekle, PR aç. Kod değişmez. Detay → [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### Roadmap (v0.3+)
+
+- `claudex bench` — profilleri latency/cost karşılaştır
+- macOS Keychain encrypted secrets (opt-in)
+- Cost tracking — Claude Code log'larından token sayımı
+- Tab completion (zsh/bash/fish)
+- Anthropic-uyumlu olmayan sağlayıcılar (Groq, Gemini direkt) için claude-code-router proxy modu
 
 ### Yasal uyarı
 
-`claudex`, **bağımsız** bir açık-kaynak araçtır. Anthropic, Z.ai, MiniMax, DeepSeek, Moonshot, OpenRouter veya başka bir sağlayıcı tarafından desteklenmez veya onaylanmaz. Sadece Claude Code'un kendi env override mekaniklerini kullanır. Sağlayıcı kullanım koşullarına uymak senin sorumluluğun.
+`claudex` **bağımsız** bir açık-kaynak araçtır. Anthropic, Z.ai, MiniMax, DeepSeek, Moonshot, OpenRouter veya başka bir sağlayıcı tarafından desteklenmez veya onaylanmaz. Sağlayıcı kullanım koşullarına uymak senin sorumluluğun.
 
 ---
 
@@ -130,65 +156,83 @@ Claude Code 5 env değişkenine bakar:
 
 ### Why?
 
-Claude Code today:
-- Hits your Anthropic subscription rate limit
-- Lets you point at **much cheaper or free** model providers (DeepSeek, Z.ai, MiniMax, OpenRouter…) via `ANTHROPIC_BASE_URL` override — but you have to write each alias by hand
-- Needs a different `CLAUDE_CONFIG_DIR` per terminal for multi-account
+- Double your Anthropic subscription rate limit (multi-account)
+- Use **much cheaper or free** models (DeepSeek, Z.ai, MiniMax, OpenRouter…) inside Claude Code
+- Everything stays in Claude Code's UI/skills/MCP/agent ecosystem; only the model behind it changes
 
-`claudex` solves all three in one tool.
+### Prerequisites
 
-### Quick install
+- Node.js 20+ — https://nodejs.org/
+- Claude Code — `npm install -g @anthropic-ai/claude-code`
+- zsh or bash
+
+### Install (30 seconds)
 
 ```bash
-npm install -g claudex
+git clone https://github.com/Mattai1/claudex.git
+cd claudex
+npm install && npm run build && npm link
 claudex init
 ```
 
-### Add a new alias (interactive)
+> ℹ️ `npm install -g claudex` publish coming soon. For now: git clone.
+
+### First profile (guided)
 
 ```bash
-claudex add claude5
+claudex quickstart
 ```
 
-Walks you through provider → key → models → done. Then:
+Walks you through Z.ai → MiniMax → OpenRouter (skip any). When done: `source ~/.zshrc`, then `claude-zai` (or `claude-minimax`, `claude-or`) launches Claude Code with the new model.
+
+### Which model?
+
 ```bash
-source ~/.zshrc
-claude5
+claudex recommend
 ```
 
-### Bundled providers (v0.1)
+Interactive: "What do you want to do?" → 8 use cases (fast coding / refactor / long context / vision / …). Shows top-3 with rationale and the install command.
 
-| ID | Tier | Where to register | Default models |
-|----|------|-------------------|----------------|
-| `anthropic` | Official | Subscription | (default) |
-| `zai` | **FREE FOREVER** | [z.ai](https://z.ai) | GLM-4.7-Flash / GLM-4.5-Flash |
-| `minimax` | **FREE TRIAL** (until Nov 7 2026) | [platform.minimax.io](https://platform.minimax.io) | MiniMax-M2.7 |
-| `deepseek` | Cheap-paid | [platform.deepseek.com](https://platform.deepseek.com) | deepseek-v4-pro / flash |
-| `moonshot` | Paid | [platform.moonshot.ai](https://platform.moonshot.ai) | Kimi K2.5 / K2.6 |
-| `openrouter` | 32 free models | [openrouter.ai](https://openrouter.ai) | qwen3-coder:free |
+Non-interactive:
+```bash
+claudex recommend coding-fast --json
+```
 
-All have **Anthropic-compatible** endpoints — no proxy/router needed.
+### Decision tree
+
+```
+Free?
+├── Forever-free model → claudex add <name> --provider zai
+├── One of 32 free models → claudex add <name> --provider openrouter
+└── Trial (until Nov 7 2026) → claudex add <name> --provider minimax
+
+Cheap paid?
+└── DeepSeek (~10x cheaper than Sonnet) → claudex add <name> --provider deepseek
+
+Official Anthropic (multi-account)?
+└── claudex add <name> --provider anthropic --no-share
+```
 
 ### Commands
 
 ```bash
-claudex init                       # initial setup (~/.claudex + shell rc block)
-claudex add <name> [-p <provider>] # add a new alias (interactive)
-claudex list                       # list all profiles
-claudex remove <name>              # remove an alias
-claudex providers                  # browse available providers
-claudex providers info <id>        # provider detail (key URL + models)
-claudex doctor                     # diagnose setup
-claudex --lang tr                  # Turkish output
+claudex init                        # initial setup (~/.claudex + shell rc block)
+claudex quickstart                  # guided setup of 3 free providers
+claudex recommend [<intent>]        # top-3 model suggestions per use case
+claudex add <name> [-p <provider>]  # add an alias (interactive)
+claudex validate <name>             # ping the provider with a 1-token test
+claudex list                        # list all profiles
+claudex remove <name>               # remove alias
+claudex providers [info <id>]       # provider catalog
+claudex export <name> [-o file]     # redacted JSON template (no key)
+claudex import <file>               # load template, prompt for key
+claudex doctor                      # health check
+claudex --lang tr                   # Turkish output
 ```
-
-### How it works
-
-Claude Code respects 5 env vars: `CLAUDE_CONFIG_DIR`, `ANTHROPIC_BASE_URL`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_MODEL`, `ANTHROPIC_SMALL_FAST_MODEL`. `claudex add` generates a shell function per profile that loads the key from a mode-0600 `.env`, sets the env vars, and execs `claude`. The key never appears in argv or shell history.
 
 ### Disclaimer
 
-`claudex` is an independent open-source tool. **Not affiliated with, endorsed by, or sponsored by Anthropic, Z.ai, MiniMax, DeepSeek, Moonshot, OpenRouter, or any other provider.** It uses only Claude Code's own env-override mechanics. Compliance with each provider's terms of service is your responsibility.
+`claudex` is an independent open-source tool. **Not affiliated with, endorsed by, or sponsored by Anthropic, Z.ai, MiniMax, DeepSeek, Moonshot, OpenRouter, or any other provider.** Compliance with each provider's terms of service is your responsibility.
 
 ### License
 

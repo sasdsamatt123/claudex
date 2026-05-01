@@ -41,10 +41,10 @@
         }
       },
       "models": [
-        { "id": "glm-4.7-flash", "role": "main", "free": true, "context": 203000, "note": "MoE 30B aktif 3B, coding güçlü" },
-        { "id": "glm-4.5-flash", "role": "small", "free": true, "context": 131000, "note": "Hafif/hızlı kuzeni" },
-        { "id": "glm-4.7", "role": "main", "free": false, "note": "Coding plan ($18/mo)" },
-        { "id": "glm-5.1", "role": "main", "free": false, "note": "744B MoE — 8+ saat otonom task" }
+        { "id": "glm-4.7-flash", "role": "main", "free": true, "context": 203000, "note": "MoE 30B aktif 3B, coding güçlü", "useCases": ["coding-fast", "free-trial", "long-context"], "pricing": null },
+        { "id": "glm-4.5-flash", "role": "small", "free": true, "context": 131000, "note": "Hafif/hızlı kuzeni", "useCases": ["coding-fast", "free-trial", "cheap-batch"], "pricing": null },
+        { "id": "glm-4.7", "role": "main", "free": false, "note": "Coding plan ($18/mo)", "useCases": ["refactor", "coding-fast"], "pricing": { "inputPer1M": 5, "outputPer1M": 15 } },
+        { "id": "glm-5.1", "role": "main", "free": false, "note": "744B MoE — 8+ saat otonom task", "useCases": ["refactor", "long-context", "multi-agent"], "pricing": { "inputPer1M": 8, "outputPer1M": 30 } }
       ],
       "defaults": { "main": "glm-4.7-flash", "small": "glm-4.5-flash" },
       "notes": {
@@ -70,10 +70,10 @@
         }
       },
       "models": [
-        { "id": "MiniMax-M2.7", "role": "main", "free": true, "context": 204800, "note": "60 tps, Opus 4.6 seviyesi" },
-        { "id": "MiniMax-M2.7-highspeed", "role": "small", "free": true, "context": 204800, "note": "100 tps highspeed" },
-        { "id": "MiniMax-M2.5", "role": "main", "free": true, "context": 204800 },
-        { "id": "MiniMax-M2.5-highspeed", "role": "small", "free": true, "context": 204800 }
+        { "id": "MiniMax-M2.7", "role": "main", "free": true, "context": 204800, "note": "60 tps, Opus 4.6 seviyesi", "useCases": ["refactor", "long-context", "multi-agent", "free-trial"], "pricing": { "inputPer1M": 0, "outputPer1M": 0, "trial": true } },
+        { "id": "MiniMax-M2.7-highspeed", "role": "small", "free": true, "context": 204800, "note": "100 tps highspeed", "useCases": ["coding-fast", "cheap-agent", "cheap-batch", "free-trial"], "pricing": { "inputPer1M": 0, "outputPer1M": 0, "trial": true } },
+        { "id": "MiniMax-M2.5", "role": "main", "free": true, "context": 204800, "useCases": ["refactor", "long-context", "free-trial"], "pricing": { "inputPer1M": 0, "outputPer1M": 0, "trial": true } },
+        { "id": "MiniMax-M2.5-highspeed", "role": "small", "free": true, "context": 204800, "useCases": ["coding-fast", "cheap-agent", "free-trial"], "pricing": { "inputPer1M": 0, "outputPer1M": 0, "trial": true } }
       ],
       "defaults": { "main": "MiniMax-M2.7", "small": "MiniMax-M2.7-highspeed" },
       "notes": {
@@ -98,8 +98,8 @@
         }
       },
       "models": [
-        { "id": "deepseek-v4-pro", "role": "main", "free": false, "context": 128000, "note": "Ana model — ağır kod" },
-        { "id": "deepseek-v4-flash", "role": "small", "free": false, "context": 128000, "note": "Arka plan / ucuz task" }
+        { "id": "deepseek-v4-pro", "role": "main", "free": false, "context": 128000, "note": "Ana model — ağır kod", "useCases": ["refactor", "cheap-batch"], "pricing": { "inputPer1M": 0.27, "outputPer1M": 1.10 } },
+        { "id": "deepseek-v4-flash", "role": "small", "free": false, "context": 128000, "note": "Arka plan / ucuz task", "useCases": ["coding-fast", "cheap-agent", "cheap-batch"], "pricing": { "inputPer1M": 0.07, "outputPer1M": 0.27 } }
       ],
       "defaults": { "main": "deepseek-v4-pro", "small": "deepseek-v4-flash" },
       "notes": {
@@ -124,8 +124,8 @@
         }
       },
       "models": [
-        { "id": "kimi-k2.5", "role": "main", "free": false, "note": "1T param MoE, uzun context" },
-        { "id": "kimi-k2.6", "role": "main", "free": false, "note": "Beta (April 2026)" }
+        { "id": "kimi-k2.5", "role": "main", "free": false, "context": 200000, "note": "1T param MoE, uzun context", "useCases": ["long-context", "refactor"], "pricing": { "inputPer1M": 0.6, "outputPer1M": 2.5 } },
+        { "id": "kimi-k2.6", "role": "main", "free": false, "context": 200000, "note": "Beta (April 2026)", "useCases": ["long-context", "refactor", "multi-agent"], "pricing": { "inputPer1M": 0.6, "outputPer1M": 2.5 } }
       ],
       "defaults": { "main": "kimi-k2.5", "small": "kimi-k2.5" },
       "notes": {
@@ -150,18 +150,18 @@
         }
       },
       "models": [
-        { "id": "qwen/qwen3-coder:free", "role": "main", "free": true, "context": 262000, "note": "EN GÜÇLÜ ücretsiz coder — Qwen3-Coder 480B" },
-        { "id": "z-ai/glm-4.5-air:free", "role": "small", "free": true, "context": 131000, "note": "Hafif GLM, hızlı" },
-        { "id": "minimax/minimax-m2.5:free", "role": "main", "free": true, "context": 197000 },
-        { "id": "openai/gpt-oss-120b:free", "role": "main", "free": true, "context": 131000, "note": "OpenAI open-source — reasoning" },
-        { "id": "openai/gpt-oss-20b:free", "role": "small", "free": true, "context": 131000 },
-        { "id": "inclusionai/ling-2.6-1t:free", "role": "main", "free": true, "context": 262000, "note": "1T param, agentic" },
-        { "id": "tencent/hy3-preview:free", "role": "main", "free": true, "context": 262000, "note": "#2 coding" },
-        { "id": "google/gemma-4-31b-it:free", "role": "main", "free": true, "context": 262000, "note": "Vision + tools" },
-        { "id": "nvidia/nemotron-3-super-120b-a12b:free", "role": "main", "free": true, "context": 262000, "note": "Multi-agent reasoning" },
-        { "id": "poolside/laguna-m.1:free", "role": "main", "free": true, "context": 131000, "note": "Coding agents" },
-        { "id": "anthropic/claude-sonnet-4.5", "role": "main", "free": false, "note": "Resmi Sonnet 4.5 — paid" },
-        { "id": "anthropic/claude-opus-4.7", "role": "main", "free": false, "note": "Resmi Opus 4.7 — paid" }
+        { "id": "qwen/qwen3-coder:free", "role": "main", "free": true, "context": 262000, "note": "EN GÜÇLÜ ücretsiz coder — Qwen3-Coder 480B", "useCases": ["coding-fast", "free-trial", "refactor"], "pricing": null },
+        { "id": "z-ai/glm-4.5-air:free", "role": "small", "free": true, "context": 131000, "note": "Hafif GLM, hızlı", "useCases": ["coding-fast", "free-trial", "cheap-batch"], "pricing": null },
+        { "id": "minimax/minimax-m2.5:free", "role": "main", "free": true, "context": 197000, "useCases": ["refactor", "long-context", "free-trial"], "pricing": null },
+        { "id": "openai/gpt-oss-120b:free", "role": "main", "free": true, "context": 131000, "note": "OpenAI open-source — reasoning", "useCases": ["refactor", "multi-agent", "free-trial"], "pricing": null },
+        { "id": "openai/gpt-oss-20b:free", "role": "small", "free": true, "context": 131000, "useCases": ["coding-fast", "free-trial"], "pricing": null },
+        { "id": "inclusionai/ling-2.6-1t:free", "role": "main", "free": true, "context": 262000, "note": "1T param, agentic", "useCases": ["multi-agent", "long-context", "free-trial"], "pricing": null },
+        { "id": "tencent/hy3-preview:free", "role": "main", "free": true, "context": 262000, "note": "#2 coding", "useCases": ["coding-fast", "long-context", "free-trial"], "pricing": null },
+        { "id": "google/gemma-4-31b-it:free", "role": "main", "free": true, "context": 262000, "note": "Vision + tools", "useCases": ["vision", "coding-fast", "free-trial"], "pricing": null },
+        { "id": "nvidia/nemotron-3-super-120b-a12b:free", "role": "main", "free": true, "context": 262000, "note": "Multi-agent reasoning", "useCases": ["multi-agent", "free-trial"], "pricing": null },
+        { "id": "poolside/laguna-m.1:free", "role": "main", "free": true, "context": 131000, "note": "Coding agents", "useCases": ["coding-fast", "cheap-agent", "free-trial"], "pricing": null },
+        { "id": "anthropic/claude-sonnet-4.5", "role": "main", "free": false, "note": "Resmi Sonnet 4.5 — paid", "useCases": ["refactor", "multi-agent"], "pricing": { "inputPer1M": 3, "outputPer1M": 15 } },
+        { "id": "anthropic/claude-opus-4.7", "role": "main", "free": false, "note": "Resmi Opus 4.7 — paid", "useCases": ["refactor", "multi-agent", "long-context"], "pricing": { "inputPer1M": 15, "outputPer1M": 75 } }
       ],
       "defaults": { "main": "qwen/qwen3-coder:free", "small": "z-ai/glm-4.5-air:free" },
       "notes": {

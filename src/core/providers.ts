@@ -4,12 +4,41 @@ import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { getPaths } from "./paths.js";
 
+/**
+ * Use-case identifiers for the recommender. The order in `useCases` matters:
+ * the first entry is treated as the model's PRIMARY use case (rank 2),
+ * subsequent entries are SECONDARY (rank 1). See `recommender.ts`.
+ */
+export const USE_CASES = [
+  "coding-fast",
+  "refactor",
+  "long-context",
+  "cheap-agent",
+  "vision",
+  "multi-agent",
+  "free-trial",
+  "cheap-batch",
+] as const;
+export type UseCase = (typeof USE_CASES)[number];
+
+const PricingSchema = z.union([
+  z.null(),
+  z.object({
+    inputPer1M: z.number(),
+    outputPer1M: z.number(),
+    trial: z.boolean().optional(),
+  }),
+]);
+
 const ModelSchema = z.object({
   id: z.string(),
   role: z.enum(["main", "small"]),
   free: z.boolean(),
   context: z.number().optional(),
   note: z.string().optional(),
+  // v0.2 additions — optional + defaulted so v0.1 providers.user.json keeps parsing.
+  useCases: z.array(z.string()).optional().default([]),
+  pricing: PricingSchema.optional().default(null),
 });
 
 const InstructionsSchema = z.object({

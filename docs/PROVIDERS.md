@@ -1,6 +1,22 @@
 # Providers
 
-Bundled v0.1 providers and where to get keys. All have **native Anthropic-compatible** endpoints; no proxy needed.
+Bundled providers and where to get keys. All have **native Anthropic-compatible** endpoints; no proxy needed.
+
+## Use-case → Provider map
+
+`claudex recommend <intent>` ranks across all providers, but here's a quick reference:
+
+| Use case | Top free pick | Top paid pick |
+|---|---|---|
+| `coding-fast` Hızlı kod / refactor | Z.ai · `glm-4.7-flash` | DeepSeek · `deepseek-v4-flash` |
+| `refactor` Ağır refactor | MiniMax · `MiniMax-M2.7` (trial) | DeepSeek · `deepseek-v4-pro` |
+| `long-context` >200K context | Z.ai · `glm-5.1` (paid) / Z.ai `glm-4.7-flash` (free) | Moonshot · `kimi-k2.5` |
+| `cheap-agent` Yüksek hacim agent | OpenRouter · `z-ai/glm-4.5-air:free` | DeepSeek · `deepseek-v4-flash` |
+| `vision` Multimodal | OpenRouter · `google/gemma-4-31b-it:free` | (yok bundled) |
+| `multi-agent` Orchestration | OpenRouter · `nvidia/nemotron-3-super-120b-a12b:free` | OpenRouter · `anthropic/claude-opus-4.7` |
+| `free-trial` Sıfır maliyet | Z.ai · `glm-4.7-flash` | — |
+| `cheap-batch` Bulk processing | OpenRouter · `z-ai/glm-4.5-air:free` | DeepSeek · `deepseek-v4-flash` |
+
 
 ## Z.ai (Zhipu) — FREE FOREVER 🥇
 
