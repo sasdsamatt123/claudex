@@ -55,10 +55,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourname/claudex.git"
+    "url": "https://github.com/mertapp1122/claudex.git"
   },
-  "homepage": "https://github.com/yourname/claudex#readme",
+  "homepage": "https://github.com/mertapp1122/claudex#readme",
   "bugs": {
-    "url": "https://github.com/yourname/claudex/issues"
+    "url": "https://github.com/mertapp1122/claudex/issues"
   }
 }
