@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/cover.jpg" alt="claudex — one terminal, six providers, bring your own key" width="100%">
+</p>
+
 # claudex
 
 > **Claude Code'u tek terminalden çoklu hesap + çoklu sağlayıcı (Anthropic, Z.ai, MiniMax, DeepSeek, Moonshot, OpenRouter…) ile kullan. Kendi key'lerini getir.**
