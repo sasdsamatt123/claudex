@@ -18,7 +18,7 @@ npm install -g @anthropic-ai/claude-code
 ## 2. claudex'i kur
 
 ```bash
-git clone https://github.com/mertapp1122/claudex.git
+git clone https://github.com/sasdsamatt123/claudex.git
 cd claudex
 npm install && npm run build && npm link
 claudex --version    # 0.2.0

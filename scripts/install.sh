@@ -2,7 +2,7 @@
 # claudex one-liner installer
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/mertapp1122/claudex/main/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/sasdsamatt123/claudex/main/scripts/install.sh | bash
 #
 # What it does:
 #   1. Verifies node >= 20 is installed
@@ -57,5 +57,5 @@ Next:
   claudex providers           # see who you can connect to
   claudex add <name>          # add your first profile
 
-Docs: https://github.com/mertapp1122/claudex#readme
+Docs: https://github.com/sasdsamatt123/claudex#readme
 EOF
