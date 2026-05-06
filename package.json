@@ -1,7 +1,7 @@
 {
   "name": "claudex",
   "version": "0.2.0",
-  "description": "Multi-account, multi-provider Claude Code CLI — bring your own keys, ship in seconds",
+  "description": "Multi-provider, multi-profile Claude Code CLI — bring your own keys, switch endpoints in seconds",
   "keywords": [
     "claude",
     "claude-code",
@@ -12,7 +12,7 @@
     "z.ai",
     "moonshot",
     "openrouter",
-    "multi-account",
+    "multi-profile",
     "cli"
   ],
   "author": "claudex contributors",

@@ -13,8 +13,8 @@
         "keyUrl": "https://console.anthropic.com/settings/keys",
         "needsKey": false,
         "instructions": {
-          "tr": "Resmi Claude Code için Anthropic abonliği yeterli. Multi-account istiyorsan ikinci hesap aç, claudex CONFIG_DIR'ı izole edecek.",
-          "en": "For official Claude Code, an Anthropic subscription is enough. For multi-account, register a second account; claudex isolates CONFIG_DIR."
+          "tr": "Anthropic resmi endpoint'i. Birden fazla ayrı-faturalı API hesabın varsa (örn. kişisel + şirket), her birini ayrı profil olarak ekle — claudex CONFIG_DIR'ı izole eder. Tek bir Pro/Max aboneliğini paylaşmak için DEĞİL.",
+          "en": "Official Anthropic endpoint. For users with multiple separately-billed API accounts (e.g., personal + company), add each as its own profile — claudex isolates CONFIG_DIR. Not for sharing a single Pro/Max subscription."
         }
       },
       "models": [],

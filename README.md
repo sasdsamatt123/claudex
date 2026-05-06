@@ -16,9 +16,11 @@
 
 ### Neden?
 
-- Anthropic abonelik rate-limit'ini iki katına çıkarmak (multi-account)
-- DeepSeek / Z.ai / MiniMax gibi **çok daha ucuz veya ücretsiz** modelleri Claude Code üzerinden kullanmak
-- Her şey Claude Code'un kendi UI/skill/MCP/agent dünyasında, sadece arkadaki model değişiyor
+- DeepSeek / Z.ai / MiniMax gibi **çok daha ucuz veya ücretsiz** Anthropic-uyumlu sağlayıcıları Claude Code üzerinden kullanmak
+- Birden fazla **ayrı-faturalı** API hesabını (örn. kişisel + şirket) tek terminalde, izole `CLAUDE_CONFIG_DIR`'larla yönetmek
+- Her şey Claude Code'un kendi UI/skill/MCP/agent dünyasında, sadece arkadaki model + key değişiyor
+
+> ⚠️ **Bu araç bir Anthropic Pro/Max aboneliğini birden fazla kullanıcıya yaymak veya hesap-başı rate-limit'i dolanmak için DEĞİLDİR.** Anthropic [Tüketici Koşulları](https://www.anthropic.com/legal/consumer-terms) ve [Kullanım Politikası](https://www.anthropic.com/legal/aup) bunu yasaklar. `claudex` yalnızca **ayrı yetkilendirilmiş** sağlayıcı hesaplarını / API key'lerini birbirinden bağımsız profil olarak yönetir.
 
 ### Önkoşullar
 
@@ -75,7 +77,7 @@ claudex recommend coding-fast --json
 Ucuz ödemeli?
 └── DeepSeek (~10x Sonnet'ten ucuz) → claudex add <name> --provider deepseek
 
-Resmi Anthropic (multi-account izolasyon)?
+Birden fazla ayrı-faturalı Anthropic API hesabı (kişisel/şirket/proje izolasyonu)?
 └── claudex add <name> --provider anthropic --no-share
 ```
 
@@ -160,9 +162,11 @@ Mevcut `~/.claude/` ile paylaşım: default olarak agents/commands/skills/plugin
 
 ### Why?
 
-- Double your Anthropic subscription rate limit (multi-account)
-- Use **much cheaper or free** models (DeepSeek, Z.ai, MiniMax, OpenRouter…) inside Claude Code
-- Everything stays in Claude Code's UI/skills/MCP/agent ecosystem; only the model behind it changes
+- Use **much cheaper or free** Anthropic-compatible providers (DeepSeek, Z.ai, MiniMax, OpenRouter…) through Claude Code
+- Manage multiple **separately-billed** API accounts (e.g., personal + company) in one terminal with isolated `CLAUDE_CONFIG_DIR`s
+- Everything stays in Claude Code's UI/skills/MCP/agent ecosystem — only the model + key behind it changes
+
+> ⚠️ **This is NOT a way to share or duplicate an Anthropic Pro/Max subscription across users, nor to circumvent per-account rate limits.** Anthropic's [Consumer Terms](https://www.anthropic.com/legal/consumer-terms) and [Usage Policy](https://www.anthropic.com/legal/aup) prohibit that. `claudex` only manages **separately authorized** provider accounts / API keys as independent profiles.
 
 ### Prerequisites
 
@@ -213,7 +217,7 @@ Free?
 Cheap paid?
 └── DeepSeek (~10x cheaper than Sonnet) → claudex add <name> --provider deepseek
 
-Official Anthropic (multi-account)?
+Multiple separately-billed Anthropic API accounts (personal/company/project isolation)?
 └── claudex add <name> --provider anthropic --no-share
 ```
 

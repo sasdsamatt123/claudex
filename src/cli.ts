@@ -21,7 +21,7 @@ const program = new Command();
 program
   .name("claudex")
   .description(
-    "Multi-account, multi-provider Claude Code CLI. Bring your own keys."
+    "Multi-provider, multi-profile Claude Code CLI. Bring your own keys."
   )
   .version(VERSION)
   .addOption(

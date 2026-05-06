@@ -79,7 +79,7 @@ claudex add claude8 --provider moonshot
 - **Key URL**: https://console.anthropic.com/settings/keys
 - **Base URL**: (default — not overridden)
 - **Models**: Whatever your subscription gives you
-- **Note**: For multi-account isolation only. claudex sets `CLAUDE_CONFIG_DIR` per profile so two Anthropic accounts don't collide.
+- **Note**: For users with **multiple separately-billed Anthropic API accounts** (e.g., personal + company, or different organizations). claudex sets `CLAUDE_CONFIG_DIR` per profile so the accounts don't collide. **Not for sharing or duplicating a single Pro/Max subscription** — Anthropic's [Consumer Terms](https://www.anthropic.com/legal/consumer-terms) prohibit that.
 
 ```
 claudex add claude2 --provider anthropic --no-share
